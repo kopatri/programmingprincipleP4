@@ -89,7 +89,7 @@ function populateTableWith(data) {
 function yearSelected() {
     var selectedYear = document.getElementById("selectYear").value;
     if (selectedYear.match("All")) {
-        displayAllYears();
+        displayAll();
     } else {
         filterByYear(selectedYear);
     }
@@ -116,25 +116,11 @@ function filterByYear(year) {
     }
 }
 
-function displayAllYears() {
-    var table, tr, td, i, txtValue;
-    table = document.getElementById("movieTable");
-    tr = table.getElementsByTagName("tr");
-
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-            txtValue = td.innerHTML;
-            tr[i].style.display = "";
-        }
-    }
-}
 
 function genreSelected() {
     var selectedGenre = document.getElementById("selectGenre").value;
     if (selectedGenre.match("All")) {
-        displayAllGenres();
+        displayAll();
     } else {
         filterByGenre(selectedGenre);
     }
@@ -160,16 +146,49 @@ function filterByGenre(genre) {
     }
 }
 
-function displayAllGenres() {
-    console.log("Dispaly All genre");
 
-    var table, tr, td, txtValue;
+function filter() {
+    displayAll();
+    var selectedYear = document.getElementById("selectYear").value;
+    var selectedGenre = document.getElementById("selectGenre").value;
+
+    console.log("selectedYear: " + selectedYear);
+    console.log("selectGenre: " + selectedGenre);
+
+    var table, tr, tdGenre, tdYear, txtGenre, txtYear;
+
     table = document.getElementById("movieTable");
     tr = table.getElementsByTagName("tr");
 
-    // Loop through all table rows, and hide those who don't match the search query
+    if (selectedYear.indexOf("All") > -1 || selectedGenre.indexOf("All") > -1) {
+        console.log("one all contained");
+    } else {
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            tdGenre = tr[i].getElementsByTagName("td")[2]; //genre
+            tdYear = tr[i].getElementsByTagName("td")[0]; //year
+            if (tdGenre && tdYear) {
+                txtGenre = tdGenre.innerHTML;
+                txtYear = tdYear.innerHTML;
+                if (txtYear.indexOf(selectedYear) > -1 && txtGenre.indexOf(selectedGenre) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+}
+
+
+
+function displayAll() {
+    console.log("Display Everything");
+    var table, tr, td, txtValue;
+    table = document.getElementById("movieTable");
+    tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[2];
+        td = tr[i].getElementsByTagName("td");
         if (td) {
             txtValue = td.innerHTML;
             tr[i].style.display = "";
@@ -179,9 +198,9 @@ function displayAllGenres() {
 
 function initialise() {
     var yearSelect = document.getElementById("selectYear");
-    yearSelect.onchange = yearSelected;
+    yearSelect.onchange = filter;
     var genreSelect = document.getElementById("selectGenre");
-    genreSelect.onchange = genreSelected;
+    genreSelect.onchange = filter;
 }
 
 window.onload = initialise
