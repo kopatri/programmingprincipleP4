@@ -36,7 +36,6 @@ function populateGenresSelect(data) {
             duplicateValuesGenres.push("Not classified");
         }
         for (k = 0; k < data[i].genres.length; k++) {
-
             duplicateValuesGenres.push(data[i].genres[k]);
         }
     }
@@ -85,68 +84,7 @@ function populateTableWith(data) {
 }
 
 //Filtering
-
-function yearSelected() {
-    var selectedYear = document.getElementById("selectYear").value;
-    if (selectedYear.match("All")) {
-        displayAll();
-    } else {
-        filterByYear(selectedYear);
-    }
-}
-
 //https://www.w3schools.com/howto/howto_js_filter_table.asp
-function filterByYear(year) {
-    var table, tr, td, txtValue;
-    table = document.getElementById("movieTable");
-    tr = table.getElementsByTagName("tr");
-
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-            txtValue = td.innerHTML;
-            console.log("textValue:" + txtValue);
-            if (txtValue.indexOf(year) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}
-
-
-function genreSelected() {
-    var selectedGenre = document.getElementById("selectGenre").value;
-    if (selectedGenre.match("All")) {
-        displayAll();
-    } else {
-        filterByGenre(selectedGenre);
-    }
-}
-
-function filterByGenre(genre) {
-    console.log("FilterByGenre: " + genre);
-    var table, tr, td, txtValue;
-    table = document.getElementById("movieTable");
-    tr = table.getElementsByTagName("tr");
-
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[2];
-        if (td) {
-            txtValue = td.innerHTML;
-            if (txtValue.indexOf(genre) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}
-
-
 function filter() {
 
     var selectedYear = document.getElementById("selectYear").value;
@@ -156,6 +94,7 @@ function filter() {
     console.log("selectGenre: " + selectedGenre);
 
     var table, tr, tdGenre, tdYear, txtGenre, txtYear;
+    var notDisplayedMovies = 0;
 
     table = document.getElementById("movieTable");
     tr = table.getElementsByTagName("tr");
@@ -168,7 +107,6 @@ function filter() {
             txtGenre = tdGenre.innerHTML;
             txtYear = tdYear.innerHTML;
             //All & All
-
             if (selectedYear.indexOf("All") > -1 && selectedGenre.indexOf('All') > -1) {
                 console.log("Display All")
                 displayAll();
@@ -185,10 +123,17 @@ function filter() {
             }
             else {
                 tr[i].style.display = "none";
+                notDisplayedMovies++; //counting in here due to performance reasons. otherwiese external methods needs to count again
             }
         }
     }
+    //isTableEmpty(notDisplayedMovies, tr.length, table);
+}
 
+function isTableEmpty(m, l) {
+    if (l - m == 1) {
+        alert("The filters do not match any movie!");
+    }
 }
 
 
