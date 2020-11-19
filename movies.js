@@ -148,7 +148,7 @@ function filterByGenre(genre) {
 
 
 function filter() {
-    displayAll();
+
     var selectedYear = document.getElementById("selectYear").value;
     var selectedGenre = document.getElementById("selectGenre").value;
 
@@ -160,30 +160,39 @@ function filter() {
     table = document.getElementById("movieTable");
     tr = table.getElementsByTagName("tr");
 
-    if (selectedYear.indexOf("All") > -1 || selectedGenre.indexOf("All") > -1) {
-        console.log("one all contained");
-    } else {
-        // Loop through all table rows, and hide those who don't match the search query
-        for (i = 0; i < tr.length; i++) {
-            tdGenre = tr[i].getElementsByTagName("td")[2]; //genre
-            tdYear = tr[i].getElementsByTagName("td")[0]; //year
-            if (tdGenre && tdYear) {
-                txtGenre = tdGenre.innerHTML;
-                txtYear = tdYear.innerHTML;
-                if (txtYear.indexOf(selectedYear) > -1 && txtGenre.indexOf(selectedGenre) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+        tdGenre = tr[i].getElementsByTagName("td")[2]; //genre
+        tdYear = tr[i].getElementsByTagName("td")[0]; //year
+        if (tdGenre && tdYear) {
+            txtGenre = tdGenre.innerHTML;
+            txtYear = tdYear.innerHTML;
+            //All & All
+
+            if (selectedYear.indexOf("All") > -1 && selectedGenre.indexOf('All') > -1) {
+                console.log("Display All")
+                displayAll();
+                break;
+            } //Year + Genre
+            else if (txtYear.indexOf(selectedYear) > -1 && txtGenre.indexOf(selectedGenre) > -1) {
+                tr[i].style.display = "";
+            } //All + Genre
+            else if (selectedYear.indexOf("All") > -1 && txtGenre.indexOf(selectedGenre) > -1) {
+                tr[i].style.display = "";
+            } //Year + All
+            else if (txtYear.indexOf(selectedYear) > -1 && selectedGenre.indexOf("All") > -1) {
+                tr[i].style.display = "";
+            }
+            else {
+                tr[i].style.display = "none";
             }
         }
     }
+
 }
 
 
-
 function displayAll() {
-    console.log("Display Everything");
     var table, tr, td, txtValue;
     table = document.getElementById("movieTable");
     tr = table.getElementsByTagName("tr");
