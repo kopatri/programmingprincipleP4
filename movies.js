@@ -3,46 +3,84 @@ about:config
 privacy:file_unique_origin -> false
 security.fileuri.strict_origin_policy -> false
 */
+//constant to handle empty cells, will be outputed if a cell is empty
+const emptyCell = "Not classified";
 
 //fetch the movies data
 fetch("movies-small.json")
     .then(response => response.json())
     .then(data => {
-
-        populateTableWith(data);
+        populateTableWith(data, 'movieTable', 'tbody');
         populateYearSelect(data)
         populateGenresSelect(data);
-
     })
     .catch(error => console.log(error));
 
-//Populating the table dynamically
-function populateYearSelect(data) {
-    var duplicateValuesYear = [];
-    duplicateValuesYear.push("All");
+//populating the table with the fetched movie data
+function populateTableWith(data, tableID, tableBodyTag) {
+    let tableBody = document.getElementById(tableID).getElementsByTagName(tableBodyTag)[0];
     for (i = 0; i < data.length; i++) {
-        duplicateValuesYear.push(data[i].year);
+        //Inserting row
+        let newRow = tableBody.insertRow();
+        //Inserting cells to row
+        let year = newRow.insertCell();
+        let title = newRow.insertCell();
+        let genres = newRow.insertCell();
+        let cast = newRow.insertCell();
+        //Appending text to corresponding cell
+        year.appendChild(document.createTextNode(data[i].year));
+        title.appendChild(document.createTextNode(data[i].title));
+        //Handling empty data sets for genres and cast
+        checkContentAndAppend(data[i].genres, genres);
+        checkContentAndAppend(data[i].cast, cast);
     }
-    var uniqueYears = Array.from(new Set(duplicateValuesYear));
-    populateSelect(uniqueYears, "selectYear");
 }
 
-function populateGenresSelect(data) {
-    duplicateValuesGenres = [];
-    duplicateValuesGenres.push("All");
+//Check if a table cell would be empty, if the cell is empty the constant for empty cells will be assigned 
+function checkContentAndAppend(textValue, cell) {
+    if (textValue.length == 0) {
+        cell.appendChild(document.createTextNode(emptyCell));
+    } else {
+        cell.appendChild(document.createTextNode(textValue));
+    }
+}
+
+
+//Populating the select "selectYear" dynamically
+function populateYearSelect(data) {
+    let valuesYear = [];
+    valuesYear.push("All");
     for (i = 0; i < data.length; i++) {
-        //Checking for Not classified movies
+        //Checking if value is not already in the array
+        if (valuesYear.indexOf(data[i].year) === -1) {
+            valuesYear.push(data[i].year);
+        }
+    }
+    //invoking method which populates the corresponding select
+    populateSelect(valuesYear, "selectYear");
+}
+
+//Populating the select "genreYear" dynamically
+function populateGenresSelect(data) {
+    let valuesGenres = [];
+    valuesGenres.push("All");
+    for (i = 0; i < data.length; i++) {
+        //Check if movies do not have a genre classification
         if (data[i].genres.length == 0) {
-            duplicateValuesGenres.push("Not classified");
+            valuesGenres.push(emptyCell);
         }
         for (k = 0; k < data[i].genres.length; k++) {
-            duplicateValuesGenres.push(data[i].genres[k]);
+            //Checking if value is not already in the array
+            if (valuesGenres.indexOf(data[i].genres[k]) === -1) {
+                valuesGenres.push(data[i].genres[k]);
+            }
         }
     }
-    var uniqueGenres = Array.from(new Set(duplicateValuesGenres));
-    populateSelect(uniqueGenres, "selectGenre");
+    //invoking method which populates the corresponding select
+    populateSelect(valuesGenres, "selectGenre");
 }
 
+//displaying the values in the corresponsing select 
 function populateSelect(selectArray, selectID) {
     for (i = 0; i < selectArray.length; i++) {
         let option = document.createElement("option");
@@ -50,36 +88,6 @@ function populateSelect(selectArray, selectID) {
         option.value = selectArray[i];
         let select = document.getElementById(selectID);
         select.appendChild(option);
-    }
-}
-
-function populateTableWith(data) {
-    var tbodyRef = document.getElementById('movieTable').getElementsByTagName('tbody')[0];
-    //JSON is not in the same order as table rows
-    for (i = 0; i < data.length; i++) {
-        // Insert a row at the end of table
-        var newRow = tbodyRef.insertRow();
-        // Insert a cell at the end of the row
-        var year = newRow.insertCell();
-        // Append a text node to the cell
-        year.appendChild(document.createTextNode(data[i].year));
-
-        //Title row added
-        var title = newRow.insertCell();
-        title.appendChild(document.createTextNode(data[i].title));
-
-        //Genres row added -> check if a genre is classified or not classified 
-        var genres = newRow.insertCell();
-        if (data[i].genres.length == 0) {
-            genres.appendChild(document.createTextNode("Not classified"));
-        } else {
-            genres.appendChild(document.createTextNode(data[i].genres));
-        }
-
-
-        //Cast row added
-        var cast = newRow.insertCell();
-        cast.appendChild(document.createTextNode(data[i].cast));
     }
 }
 
