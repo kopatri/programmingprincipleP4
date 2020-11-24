@@ -7,11 +7,11 @@ security.fileuri.strict_origin_policy -> false
 const emptyCell = "Not classified";
 
 //fetch the movies data
-fetch("movies-small.json")
+fetch("movies.json")
     .then(response => response.json())
     .then(data => {
         populateTableWith(data, 'movieTable', 'tbody');
-        populateYearSelect(data)
+        populateYearSelect(data);
         populateGenresSelect(data);
     })
     .catch(error => console.log(error));
@@ -65,8 +65,9 @@ function populateGenresSelect(data) {
     let valuesGenres = [];
     valuesGenres.push("All");
     for (i = 0; i < data.length; i++) {
-        //Check if movies do not have a genre classification
-        if (data[i].genres.length == 0) {
+        //Check if movies do not have a genre classification, if not then the empty cell value will be assigned
+        console.log("Test: " + data[i].genres);
+        if (data[i].genres.length === 0 && valuesGenres.indexOf(emptyCell) === -1) {
             valuesGenres.push(emptyCell);
         }
         for (k = 0; k < data[i].genres.length; k++) {

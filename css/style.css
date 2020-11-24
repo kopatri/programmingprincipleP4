@@ -1,0 +1,9 @@
+/*Adding a margin between the table and the selectors*/
+table{
+    margin-top: 10px;
+}
+
+/*Adding a border to all table cells*/
+table, th, td {
+    border: 1px solid black;
+  }
