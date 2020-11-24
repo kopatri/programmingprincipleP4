@@ -4,15 +4,16 @@ privacy:file_unique_origin -> false
 security.fileuri.strict_origin_policy -> false
 */
 
-//Extension 1 search for task data
+//Extension task 1 search for cast data
 function search() {
     let input = getSearchCastInput();
     filterCast(input);
 }
 
+//Receiving cast from input field, checking if input is not empty and returning the input 
 function getSearchCastInput() {
     let input = document.getElementById('searchCastInput').value;
-    //removing whiteSpaces
+    //removing Whitespaces
     let clear = input.replace(/\s/g, "");
     if (clear.length > 0) {
         return input;
@@ -22,7 +23,7 @@ function getSearchCastInput() {
 }
 
 function filterCast(input) {
-    filterYearAndGenre();
+    //filterYearAndGenre();
     table = document.getElementById('movieTable');
     tr = table.getElementsByTagName('tr');
 
@@ -46,7 +47,7 @@ function filterCast(input) {
 function isInputEmpty(input) {
 
     //deleting white spaces
-    var clear = input.replace(/\s/g, "");
+    let clear = input.replace(/\s/g, "");
     if (clear.length > 0) {
         return false;
     } else {

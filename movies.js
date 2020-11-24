@@ -11,6 +11,7 @@ const emptyCell = 'Not classified';
 fetch('movies-small.json')
     .then(response => response.json())
     .then(data => {
+        console.log(data)
         populateTableWith(data, 'movieTable', 'tbody');
         populateYearSelect(data);
         populateGenresSelect(data);
@@ -160,12 +161,12 @@ function displayAll() {
 }
 
 function initialise() {
-    var yearSelect = document.getElementById('selectYear');
+    let yearSelect = document.getElementById('selectYear');
     yearSelect.onchange = filterYearAndGenre;
-    var genreSelect = document.getElementById('selectGenre');
+    let genreSelect = document.getElementById('selectGenre');
     genreSelect.onchange = filterYearAndGenre;
     //extension task 1, see the rest of the code in 'movies-extension1.js'
-    var searchCastButton = document.getElementById('searchCastButton');
+    let searchCastButton = document.getElementById('searchCastButton');
     searchCastButton.onclick = search;
 }
 
