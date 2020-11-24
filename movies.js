@@ -3,11 +3,12 @@ about:config
 privacy:file_unique_origin -> false
 security.fileuri.strict_origin_policy -> false
 */
-//constant to handle empty cells, will be outputed if a cell is empty
-const emptyCell = "Not classified";
+
+//constant to handle empty cells, will be assigned if a cell is empty
+const emptyCell = 'Not classified';
 
 //fetch the movies data
-fetch("movies.json")
+fetch('movies-small.json')
     .then(response => response.json())
     .then(data => {
         populateTableWith(data, 'movieTable', 'tbody');
@@ -30,7 +31,7 @@ function populateTableWith(data, tableID, tableBodyTag) {
         //Appending text to corresponding cell
         year.appendChild(document.createTextNode(data[i].year));
         title.appendChild(document.createTextNode(data[i].title));
-        //Handling empty data sets for genres and cast
+        //Handling empty cell for genres and cast
         checkContentAndAppend(data[i].genres, genres);
         checkContentAndAppend(data[i].cast, cast);
     }
@@ -46,27 +47,28 @@ function checkContentAndAppend(textValue, cell) {
 }
 
 
-//Populating the select "selectYear" dynamically
+//Populating the select 'selectYear' dynamically
+//The valuesYear-Array will receive each year only once
 function populateYearSelect(data) {
     let valuesYear = [];
-    valuesYear.push("All");
+    valuesYear.push('All');
     for (i = 0; i < data.length; i++) {
         //Checking if value is not already in the array
         if (valuesYear.indexOf(data[i].year) === -1) {
             valuesYear.push(data[i].year);
         }
     }
-    //invoking method which populates the corresponding select
-    populateSelect(valuesYear, "selectYear");
+    //invoking method which fills the corresponding select with values
+    populateSelect(valuesYear, 'selectYear');
 }
 
-//Populating the select "genreYear" dynamically
+//Populating the select 'genreYear' dynamically
+//The valuesGenres-Array will receive each genre only once
 function populateGenresSelect(data) {
     let valuesGenres = [];
-    valuesGenres.push("All");
+    valuesGenres.push('All');
     for (i = 0; i < data.length; i++) {
-        //Check if movies do not have a genre classification, if not then the empty cell value will be assigned
-        console.log("Test: " + data[i].genres);
+        //Check if movies do not have a genre classification, if not then the empty cell value will be pushed only once to genre array
         if (data[i].genres.length === 0 && valuesGenres.indexOf(emptyCell) === -1) {
             valuesGenres.push(emptyCell);
         }
@@ -77,14 +79,14 @@ function populateGenresSelect(data) {
             }
         }
     }
-    //invoking method which populates the corresponding select
-    populateSelect(valuesGenres, "selectGenre");
+    //invoking method which fills the corresponding select with values
+    populateSelect(valuesGenres, 'selectGenre');
 }
 
-//displaying the values in the corresponsing select 
+//Filling the select values to the corresponding select 
 function populateSelect(selectArray, selectID) {
     for (i = 0; i < selectArray.length; i++) {
-        let option = document.createElement("option");
+        let option = document.createElement('option');
         option.text = selectArray[i];
         option.value = selectArray[i];
         let select = document.getElementById(selectID);
@@ -92,78 +94,79 @@ function populateSelect(selectArray, selectID) {
     }
 }
 
-//Filtering
-//https://www.w3schools.com/howto/howto_js_filter_table.asp
-function filter() {
+//Filtering the results based on current year selection and current genre selection
+function filterYearAndGenre() {
+    let selectedYear = document.getElementById('selectYear').value;
+    let selectedGenre = document.getElementById('selectGenre').value;    
+    let table, tr, tdGenre, tdYear, txtGenre, txtYear;
+    let notDisplayedMovies = 0;
 
-    var selectedYear = document.getElementById("selectYear").value;
-    var selectedGenre = document.getElementById("selectGenre").value;
+    table = document.getElementById('movieTable');
+    tr = table.getElementsByTagName('tr');
 
-    console.log("selectedYear: " + selectedYear);
-    console.log("selectGenre: " + selectedGenre);
+    console.log('selectedYear: ' + selectedYear);
+    console.log('selectGenre: ' + selectedGenre);
 
-    var table, tr, tdGenre, tdYear, txtGenre, txtYear;
-    var notDisplayedMovies = 0;
-
-    table = document.getElementById("movieTable");
-    tr = table.getElementsByTagName("tr");
-
-    // Loop through all table rows, and hide those who don't match the search query
+    //iterate through all table rows and set the styling of cells which do not match to none (unvisible)
     for (i = 0; i < tr.length; i++) {
-        tdGenre = tr[i].getElementsByTagName("td")[2]; //genre
-        tdYear = tr[i].getElementsByTagName("td")[0]; //year
+        tdGenre = tr[i].getElementsByTagName('td')[2]; //Genre is at position 2
+        tdYear = tr[i].getElementsByTagName('td')[0]; //Year is at positon 0 
         if (tdGenre && tdYear) {
             txtGenre = tdGenre.innerHTML;
             txtYear = tdYear.innerHTML;
-            //All & All
-            if (selectedYear.indexOf("All") > -1 && selectedGenre.indexOf('All') > -1) {
-                console.log("Display All")
+            //When both selectors are set on 'All' display all movies
+            if (selectedYear.indexOf('All') > -1 && selectedGenre.indexOf('All') > -1) {
+                console.log('Display All')
                 displayAll();
                 break;
-            } //Year + Genre
+            } //When selected year and selected genre is not 'All' and a row matches the filters, then set the styling of the corresponding row to visible
             else if (txtYear.indexOf(selectedYear) > -1 && txtGenre.indexOf(selectedGenre) > -1) {
-                tr[i].style.display = "";
-            } //All + Genre
-            else if (selectedYear.indexOf("All") > -1 && txtGenre.indexOf(selectedGenre) > -1) {
-                tr[i].style.display = "";
-            } //Year + All
-            else if (txtYear.indexOf(selectedYear) > -1 && selectedGenre.indexOf("All") > -1) {
-                tr[i].style.display = "";
+                tr[i].style.display = '';
+            } //When selected year is 'All' and selected genre is not 'All' and a row matches the filters, then set the styling of the corresponding row to visible
+            else if (selectedYear.indexOf('All') > -1 && txtGenre.indexOf(selectedGenre) > -1) {
+                tr[i].style.display = '';
+            } //When selected year is not 'All' and selected genre is 'All' and a row matches the filters, then set the styling of the corresponding row to visible
+            else if (txtYear.indexOf(selectedYear) > -1 && selectedGenre.indexOf('All') > -1) {
+                tr[i].style.display = '';
             }
-            else {
-                tr[i].style.display = "none";
-                notDisplayedMovies++; //counting in here due to performance reasons. otherwiese external methods needs to count again
+            else {//When a row does not match the filter criteria, then set the styling of the corresponding row to none (unvisible)
+                tr[i].style.display = 'none';
+                notDisplayedMovies++; 
             }
         }
-    }
-    //isTableEmpty(notDisplayedMovies, tr.length, table);
+    }//function to give user information if the filters do not match any movie
+    //isTableEmpty(notDisplayedMovies, tr.length);
 }
 
+//If the difference between not displayed movies and the tr amount is 1, it means that the filters did not match anything
 function isTableEmpty(m, l) {
-    if (l - m == 1) {
-        alert("The filters do not match any movie!");
+    if (l - m === 1) {
+        alert('The filters do not match any movie!');
     }
 }
 
-
+//Extra function to display all movies
 function displayAll() {
-    var table, tr, td, txtValue;
-    table = document.getElementById("movieTable");
-    tr = table.getElementsByTagName("tr");
+    let table, tr, td, txtValue;
+    table = document.getElementById('movieTable');
+    tr = table.getElementsByTagName('tr');
     for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td");
+        td = tr[i].getElementsByTagName('td');
         if (td) {
             txtValue = td.innerHTML;
-            tr[i].style.display = "";
+            tr[i].style.display = '';
         }
     }
 }
 
 function initialise() {
-    var yearSelect = document.getElementById("selectYear");
-    yearSelect.onchange = filter;
-    var genreSelect = document.getElementById("selectGenre");
-    genreSelect.onchange = filter;
+    var yearSelect = document.getElementById('selectYear');
+    yearSelect.onchange = filterYearAndGenre;
+    var genreSelect = document.getElementById('selectGenre');
+    genreSelect.onchange = filterYearAndGenre;
+    //extension task 1, see the rest of the code in 'movies-extension1.js'
+    var searchCastButton = document.getElementById('searchCastButton');
+    searchCastButton.onclick = search;
 }
 
 window.onload = initialise

@@ -4,11 +4,16 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <title>American Movies</title>
-  <!--Added styling for movies table -->
-  <link rel="stylesheet" href="css/style.css">
 
-  <script src="movies-small.json"></script>
+  <!--Added styling for movies table - Modified start-->
+  <link rel="stylesheet" href="css/style.css">
+  <!--Added styling for movies table - Modified end-->
   <script src="movies.js"></script>
+  <script src="movies-extension1.js"></script>
+  
+  
+
+ 
 </head>
 
 <body>
@@ -23,6 +28,12 @@
   <select id="selectGenre">
     <!-- Insert genres as options here -->
   </select>
+
+  <!--Added search field and button for extension taks 1 - Modified start-->
+  <label for="searchCast">Search for cast: </label>
+  <input id="searchCastInput" type="text" >
+  <button id="searchCastButton">find</button>
+  <!--Added search field and button for extension taks 1  - Modified end-->
 
   <table id="movieTable">
     <tbody>
