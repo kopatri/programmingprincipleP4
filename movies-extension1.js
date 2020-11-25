@@ -13,20 +13,19 @@ function search() {
 //Receiving cast from input field, checking if input is not empty and returning the input 
 function getSearchCastInput() {
     let input = document.getElementById('searchCastInput').value;
-    //removing Whitespaces
+    //removing whitespaces
     let clear = input.replace(/\s/g, "");
     if (clear.length > 0) {
         return input;
     } else {
-        alert("Empty search for cast is forbidden");
+        alert("No cast data for search!");
     }
 }
 
+//filter cast independently from selects, only sets to none visible, does not set rows back to visible
 function filterCast(input) {
-    //filterYearAndGenre();
     table = document.getElementById('movieTable');
     tr = table.getElementsByTagName('tr');
-
     //iterate through all table rows and set the styling of cells which do not match to none (unvisible)
     for (i = 0; i < tr.length; i++) {
         tdCast = tr[i].getElementsByTagName('td')[3]; //Cast is at position 3
@@ -34,18 +33,15 @@ function filterCast(input) {
             txtCast = tdCast.innerHTML;
             txtCast = txtCast.toLowerCase();
             input = input.toLowerCase();
-            if(txtCast.match(input)){
-                //tr[i].style.display = '';
-            }else{
+            if(!txtCast.match(input)){
                 tr[i].style.display = 'none';
             }
         }
-    }//function to give user information if the filters do not match any movie
-    //isTableEmpty(notDisplayedMovies, tr.length);
+    }
 }
 
+//check if input field is empty
 function isInputEmpty(input) {
-
     //deleting white spaces
     let clear = input.replace(/\s/g, "");
     if (clear.length > 0) {
@@ -55,9 +51,3 @@ function isInputEmpty(input) {
         return true;
     }
 }
-
-function setCastInputEmpty(){
-    document.getElementById("searchCastInput").value = "";
-}
-
-

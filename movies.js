@@ -8,7 +8,7 @@ security.fileuri.strict_origin_policy -> false
 const emptyCell = 'Not classified';
 
 //fetch the movies data
-fetch('movies-small.json')
+fetch('movies.json')
     .then(response => response.json())
     .then(data => {
         console.log(data)
@@ -117,7 +117,6 @@ function filterYearAndGenre() {
             txtYear = tdYear.innerHTML;
             //When both selectors are set on 'All' display all movies
             if (selectedYear.indexOf('All') > -1 && selectedGenre.indexOf('All') > -1) {
-                console.log('Display All')
                 displayAll();
                 break;
             } //When selected year and selected genre is not 'All' and a row matches the filters, then set the styling of the corresponding row to visible
