@@ -134,11 +134,11 @@ function filterYearAndGenre() {
                 notDisplayedMovies++; 
             }
         }
-    }//function to give user information if the filters do not match any movie
-    //isTableEmpty(notDisplayedMovies, tr.length);
+    }
+    //isTableEmpty(notDisplayedMovies, tr.length); //function to give user information if the filters do not match any movie
 }
 
-//If the difference between not displayed movies and the tr amount is 1, it means that the filters did not match anything
+//If the difference between not displayed movies and the table rows amount is 1, it means that the filters did not match anything 
 function isTableEmpty(m, l) {
     if (l - m === 1) {
         alert('The filters do not match any movie!');

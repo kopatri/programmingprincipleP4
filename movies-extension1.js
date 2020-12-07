@@ -14,11 +14,11 @@ function search() {
 function getSearchCastInput() {
     let input = document.getElementById('searchCastInput').value;
     //removing whitespaces
-    let clear = input.replace(/\s/g, "");
+    let clear = input.replace(/\s/g, '');
     if (clear.length > 0) {
         return input;
     } else {
-        alert("No cast data for search!");
+        alert('No cast data for search!');
     }
 }
 
@@ -43,11 +43,11 @@ function filterCast(input) {
 //check if input field is empty
 function isInputEmpty(input) {
     //deleting white spaces
-    let clear = input.replace(/\s/g, "");
+    let clear = input.replace(/\s/g, '');
     if (clear.length > 0) {
         return false;
     } else {
-        alert("Empty inputs or only white spaces are not allowed!");
+        alert('Empty inputs or only white spaces are not allowed!');
         return true;
     }
 }
